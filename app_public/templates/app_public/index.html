@@ -1,0 +1,25 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Bistroo menu</title>
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    </head>
+    <body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="container">
+      <a class="navbar-brand" href="{% url 'app_public:index' %}"> {{ 'date' }} </a> </nav>
+        <div class="container">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+</nav>
+    </body>
+</html>

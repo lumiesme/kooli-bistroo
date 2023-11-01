@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+	<div class="container">
+    <div class="row">
+        <div class="col-8 mx-auto">
+            <h3>Toitude kategooriad</h3>
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr class="text-center">
+                    <th>id</th>
+                    <th>Toidu kategooria</th>
+                    <th>Tegevus</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for category in categories %} {# default is object_list (author) must be views.py #}
+                	<tr>
+                        <td>{{ category.number }}</td>
+                    <td>{{ category.name }}</td>
+                    <td class="text/center">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'app_admin:food_update' pk=category.id %}" class="text-warning">Uuenda kategooria nimi</a>
+                        <a href="{% url 'app_admin:food_delete' pk=category.id %}" class="text-danger">Kustuta kategooria</a>
+                        {% endif %}
+                    </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            <a href="{% url 'app_admin:category_create' %}">Lisa uus kategooria</a>
+            <a href="{% url 'app_admin:food_create' %}">Lisa uus toit kategooriasse</a>
+        </div>
+    </div>
+    </div>
+{% endblock %}
