@@ -2,7 +2,7 @@ import urllib.parse
 from urllib.request import urlopen
 import json
 from django.urls import reverse_lazy
-from .models import Category
+from .models import Category, FoodsListing
 
 from django.shortcuts import render
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
@@ -47,13 +47,33 @@ class MenuCategories(CreateView):
     queryset = MenuCategory.objects.order_by('teema_paev')
     fields = "__all__"
 
+class FoodsList(ListView):
+    template_name = 'app_admin/foods_name_listing.html'
+    model = FoodsListing
+    #queryset = FoodsListing.objects.order_by('toidu_nimetus')
+    context_object_name = 'foods'  # Update this line
+    #paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add any additional context variables here if needed
+        return context
+
+
 class Foods(CreateView):
     template_name = 'app_admin/food_create.html'
-    #kuupaev = datetime('%d.%m.%Y')
-    toidu_nimetus = models.CharField(max_length=1000,null=True, blank=True, unique=True, verbose_name="Sisesta toidu nimetus")
-    taishind = models.IntegerField(null=False, blank=True)  # hetkel ainult taishind, peaks olema kakomaga arv
-    poolhind = models.IntegerField(null=False, blank=True)
-    #on_menuus =
-    queryset = Foods_listing.objects.order_by('toidu_nimetus')
+    model = FoodsListing
     fields = '__all__'
+    # context_object_name = FoodsListing
+    success_url = reverse_lazy('app_admin:foods_name_listing')
 
+class FoodsUpdate(UpdateView):
+    model = FoodsListing
+    template_name = 'app_admin/foods_name_listing_update.html'
+    fields = '__all__'  # or fields = ['toidu_nimetus', 'taishind', 'poolhind', 'kategooria']
+    success_url = reverse_lazy('app_admin:foods_name_listing')
+
+class FoodsDelete(DeleteView):
+    model = FoodsListing
+    template_name = 'app_admin/foods_name_listing_delete.html'
+    success_url = reverse_lazy('app_admin:foods_name_listing')

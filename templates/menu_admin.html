@@ -3,8 +3,27 @@
 
     {% if user.is_authenticated %}
       <a class="navbar-brand" href="{% url 'app_admin:index' %}"> Admin vaade </a>
-         <a class="nav-link" href="{% url 'app_admin:food_list' %}">Toitude kategooriate nimekiri</a>
-        <a class="nav-link" href="{% url 'app_admin:category_create' %}">Lisa toitude kategooriate nimetusi</a>
+
+              <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+               <i class="bi bi-utensils"></i> Toidukategooriad
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'app_admin:food_list' %}">Toidukategooriate nimekiri</a></li>
+            <li><a class="dropdown-item" href="{% url 'app_admin:category_create' %}">Lisa toitude kategooriate nimetusi</a></li>
+          </ul>
+        </li>
+
+              <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-utensils"></i> Toidunimetused
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'app_admin:foods_name_listing' %}">Toidude nimekiri</a></li>
+            <li><a class="dropdown-item" href="{% url  'app_admin:food_create' %}">Lisa toitude nimetusi</a></li>
+          </ul>
+        </li>
+
         <a class="nav-link" href="{% url 'app_admin:menu_header' %}">Menuu paise valik</a>
 
     	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>

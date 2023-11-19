@@ -1,11 +1,12 @@
-{% extends 'base_admin.html' %}
-{% include views.Food %}
+{% extends 'base.html' %}
+
 {% block content %}
 	<div class="row">
     <div class="col-5 mx-auto">
-        <h3>Lisa uus toit kategooriasse</h3>
+        <h3>Uuenda toidu nime <span class="fw-bold">{{ toidu_nimetus }}</span></h3>
         <form method="post" class="form">
             {% csrf_token %}
+
             {% for field in form %}
             	<div class="form-field">
                     <label for="{{ field.id_for_label }}" class="fw-bold">{{ field.label }}</label>
@@ -22,10 +23,8 @@
                 </div>
             {% endfor %}
 
-            <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-2">
+            <input type="submit" value="Update" class="btn btn-success mt-2">
         </form>
-    <p><a href="{% url 'app_admin:foods_name_listing' %}">Toidude nimekiri</a></p>
-
     </div>
     </div>
 {% endblock %}

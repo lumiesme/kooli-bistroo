@@ -1,0 +1,39 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <h3>Toitude nimed</h3>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr class="text-center">
+                        <th>Toidu nimi</th>
+                        <th>Kategooria</th>
+                        <th>Täishind</th>
+                        <th>Poolhind</th>
+                        <th>Tegevus</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for food in foods %}
+                        <tr>
+                            <td>{{ food.toidu_nimetus }}</td>
+                            <td>{{ food.kategooria }}</td>
+                            <td>{{ food.taishind }}</td>
+                            <td>{{ food.poolhind }}</td>
+                            <td class="text-center">
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'app_admin:foods_name_listing_update' pk=food.id %}" class="text-warning">Uuenda toidu nimi</a>
+                                    <a href="{% url 'app_admin:foods_name_listing_delete' pk=food.id %}" class="text-danger">Kustuta toit</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'app_admin:category_create' %}">Lisa uus kategooria</a>
+                <a href="{% url 'app_admin:food_create' %}">Lisa uus toit kategooriasse</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

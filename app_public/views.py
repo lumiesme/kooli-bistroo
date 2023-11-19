@@ -12,11 +12,11 @@ from .models import *
 class HomeView(TemplateView):
     template_name = 'app_public/index.html'
 
-class FoodCategory(models.Model):
-    categoryname = models.CharField(max_length=100)
-    categorydetails = models.CharField(max_length=1000)
-    categoryimage = models.ImageField(default='cat_def.jpg',
-    upload_to='catimg')
+#class FoodCategory(models.Model):
+    #categoryname = models.CharField(max_length=100)
+    #categorydetails = models.CharField(max_length=1000)
+    #categoryimage = models.ImageField(default='cat_def.jpg',
+    #upload_to='catimg')
 
     class Meta:
         verbose_name = 'Food Category'

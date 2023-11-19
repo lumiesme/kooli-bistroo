@@ -1,22 +1,42 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Bistroo menu</title>
-        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
-        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
-        <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    </head>
-    <body>
-        {% include 'menu_admin.html' %}
-        <div class="container">
-            {% block content %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Bistroo menu</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <style>
+        body {
+            /* Specify the background image and other styles */
+            background-image: url("{% static 'images/pilt.jpg' %}");
+            background-size: cover; /* or 'contain' depending on your preference */
+            background-position: center center;
+            background-repeat: no-repeat;
+            min-height: 100vh; /* Ensure the background covers the entire viewport */
+            margin: 0; /* Remove default margin */
+            padding: 0; /* Remove default padding */
+        }
 
-            {% endblock %}
-        </div>
-    </body>
+        .container {
+            /* Adjust the container styles if needed */
+            background-color: rgba(255, 255, 255, 0.8); /* Optional: add a semi-transparent white background to the content */
+            border-radius: 10px; /* Optional: add rounded corners to the content */
+            padding: 20px; /* Optional: add padding to the content */
+            margin-top: 50px; /* Optional: add top margin to the content */
+        }
+    </style>
+</head>
+<body>
+    {% include 'menu_admin.html' %}
+    <div class="container">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>
 </html>
