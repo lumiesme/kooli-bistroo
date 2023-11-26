@@ -23,8 +23,9 @@
             <li><a class="dropdown-item" href="{% url  'app_admin:food_create' %}">Lisa toitude nimetusi</a></li>
           </ul>
         </li>
-
-        <a class="nav-link" href="{% url 'app_admin:menu_header' %}">Menuu paise valik</a>
+        <a class="nav-link" href="{% url 'app_admin:todays_menu_list' %}">Tanase menüü lisamine</a>
+        <a class="nav-link" href="{% url 'app_admin:menu_add' %}">Menuu lisamine</a>
+        <a class="nav-link" href="{% url 'app_admin:menu_header' %}">Menüü paise valik</a>
 
     	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>
     {% else %}

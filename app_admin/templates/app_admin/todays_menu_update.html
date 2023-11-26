@@ -1,0 +1,43 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+	<form action="" method="post" enctype="multipart/form-data">
+        {% for hidden_field in form.hidden_fields %}
+    {{ hidden_fields.errors }}
+    {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+        {{form.management_form}}
+    {{ form.non_form_errors }}
+
+    <h3>Muuda menüüd</h3>
+    {% for menu_form in form.forms %}
+    <hr>
+    <h5>
+        {% if menu_form.instance.id %}
+            Menu: {{ menu_form.instance.toit|toit }}
+            {% else %}
+            {% if form.forms|length > 1 %}
+                lisa uus toit
+                {% else %}
+                Lisa menuu
+                {% endif %}
+
+
+        {% endif %}
+    </h5>
+        {% for hidden_field in menu_form.hidden_fields %}
+
+    {{ hidden_field.errors }}
+    {% endfor %}
+    <table>
+        {{ menu_form.as.table }}
+    </table>
+    {% endfor %}
+    <hr>
+    <p>
+        <button type="submit" value="Update" class="btn btn-primary w-100 mb-3">Update</button>
+        <a href="{{ menu.get_absolute_url }}" role="button" class="btn btn-secondary w-100">Cancel</a>
+    </p>
+ </form>
+{% endblock content %}

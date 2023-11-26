@@ -3,10 +3,11 @@ from urllib.request import urlopen
 import json
 
 from django.shortcuts import render
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import (TemplateView, ListView, DetailView, FormView)
 from django.conf import settings
 from django.core.paginator import Paginator
 from .models import *
+
 
 
 class HomeView(TemplateView):

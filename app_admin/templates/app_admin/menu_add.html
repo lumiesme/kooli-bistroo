@@ -1,0 +1,14 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    {{ menus_formset.management_form }}
+    {% for form in menus_formset.forms %}
+      {{ form.as_table }}
+    {% endfor %}
+
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}
