@@ -1,5 +1,4 @@
 from django.forms.models import inlineformset_factory
+from .models import Menu, MenuCategory
 
-from .models import FoodsListing, Menu
-
-FoodMenuFormset = inlineformset_factory(FoodsListing, Menu, fields=('toit', 't_hind', 'p_hind', 'naita_menuus'))
+FoodMenuFormset = inlineformset_factory(MenuCategory, fields=('andmed','toit', 't_hind', 'p_hind', 'naita_menuus'), model=Menu)

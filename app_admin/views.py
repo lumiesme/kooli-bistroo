@@ -85,7 +85,7 @@ class FoodsDelete(DeleteView):
 
 
 class TodaysMenuCreateView(CreateView):
-    model = Menu
+    model = MenuCategory
     template_name = 'app_admin/todays_menu_create.html'
     success_url = reverse_lazy('app_admin:todays_menu_list')
     fields = '__all__'
@@ -93,7 +93,7 @@ class TodaysMenuCreateView(CreateView):
 class TodaysMenuListView(ListView):
     model = Menu
     template_name = 'app_admin/todays_menu_list.html'
-    context_object_name = 'menus'  # object_list is default
+    context_object_name = 'menucategory'  # object_list is default
     paginate_by = 10  # 10 per page in ListView
 
     def get_queryset(self):
@@ -101,7 +101,7 @@ class TodaysMenuListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['dates'] = Menus.objects.all()  # Assuming you want to display all dates
+        context['dates'] = MenuData.objects.all()  # Assuming you want to display all dates
         return context
 class TodaysMenuDetailView(DetailView):
     model = Menu

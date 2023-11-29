@@ -1,7 +1,7 @@
 {% extends 'base_admin.html' %}
 
 {% block content %}
-    <a href="{% url 'app_admin:todays_menu_create' %}" role="button" class="btn btn-primary w-10 mb-2">+UUS</a> <h3>Menüüde loetelu</h3>
+    <a href="{% url 'app_admin:todays_menu_create' %}" role="button" class="btn btn-primary w-10 mb-2">+UUE KUUPÄEVAGA MENÜÜ LISAMINE </a> <h3>Menüüde loetelu</h3>
 
     <a href="{% url 'app_admin:todays_menu_list' %}" >siia tulevad menüüde loetelud</a>
  <table class="table table-bordered table-hover">
@@ -12,7 +12,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for menu in menuu %} {# default is object_list (author) must be views.py #}
+                {% for menu in andmed %} {# default is object_list (author) must be views.py #}
                 	<tr>
                     <td>{{ menu.date }}</td>
                     <td class="text/center">
