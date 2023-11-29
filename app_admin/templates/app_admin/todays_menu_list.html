@@ -12,9 +12,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for menu in andmed %} {# default is object_list (author) must be views.py #}
+                {% for menu in menus %} {# default is object_list (author) must be views.py #}
                 	<tr>
-                    <td>{{ menu.date }}</td>
+                    <td>{{ date }}</td>
                     <td class="text/center">
                         {% if user.is_authenticated %}
                             <a href="{% url 'app_admin:todays_menu_detail' pk=menu.id %}">Detail</a>

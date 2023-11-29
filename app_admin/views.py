@@ -7,7 +7,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.urls import reverse
 
-from .forms import FoodMenuFormset
 from .models import Category, FoodsListing
 from django.contrib import messages
 from django.views.generic.detail import SingleObjectMixin
@@ -49,7 +48,7 @@ class FoodDeleteView(DeleteView):
 class MenuCategories(CreateView):
     template_name = 'app_admin/menu_header.html'
     success_url = reverse_lazy('app_admin:food_list')
-    queryset = MenuCategory.objects.order_by('teema_paev')
+    queryset = Menu.objects.order_by('teema_paev')
     fields = "__all__"
 
 class FoodsList(ListView):
@@ -85,7 +84,7 @@ class FoodsDelete(DeleteView):
 
 
 class TodaysMenuCreateView(CreateView):
-    model = MenuCategory
+    model = Menu
     template_name = 'app_admin/todays_menu_create.html'
     success_url = reverse_lazy('app_admin:todays_menu_list')
     fields = '__all__'
@@ -93,15 +92,15 @@ class TodaysMenuCreateView(CreateView):
 class TodaysMenuListView(ListView):
     model = Menu
     template_name = 'app_admin/todays_menu_list.html'
-    context_object_name = 'menucategory'  # object_list is default
+    context_object_name = 'menu'  # object_list is default
     paginate_by = 10  # 10 per page in ListView
 
     def get_queryset(self):
-        return Menu.objects.order_by('menuu__date')  # nime jargi sorteeritud, result ordered by name)
+        return Menu.objects.order_by('date')  # nime jargi sorteeritud, result ordered by name)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['dates'] = MenuData.objects.all()  # Assuming you want to display all dates
+        context['dates'] = Menu.objects.all()  # Assuming you want to display all dates
         return context
 class TodaysMenuDetailView(DetailView):
     model = Menu
