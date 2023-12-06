@@ -3,8 +3,8 @@
 
     {% if user.is_authenticated %}
       <a class="navbar-brand" href="{% url 'app_admin:index' %}"> Admin vaade </a>
-         <a class="nav-link" href="{% url 'app_admin:food_list' %}">Toitude kategooriate nimekiri</a>
-        <a class="nav-link" href="{% url 'app_admin:category_create' %}">Lisa toitude nimetusi</a>
+         <a class="nav-link" href="{% url 'app_admin:heading_list' %}">Menuu pealkirjad</a>
+        <a class="nav-link" href="{% url 'app_admin:category_list' %}">Toitude kategooriate nimekiri</a>
 
     	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>
     {% else %}
@@ -12,6 +12,5 @@
     {% endif %}
       </ul>
     </div>
-  </div>
 </nav>
 

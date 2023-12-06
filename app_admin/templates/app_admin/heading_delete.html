@@ -4,13 +4,13 @@
     <div class="col-6 mx-auto">
         <div class="card mb-3">
             <div class="card-header text-bg-danger">
-                Delete food
+                Delete menu
             </div>
             <div class="card-body">
                 <div class="alert alert-info" role="alert">
-                    Wherever this category {{ category }} is used, it will be replaced by NULL
+                    Wherever this toidunimetus {{ menuitem.food }} is used, it will be replaced by NULL
                 </div>
-                <p>Are you sure you want to delete the author {{ category }}?</p>
+                <p>Are you sure you want to delete the toit {{ menuitem.food }}?</p>
                 <form method="post">
                 {% csrf_token %}
                 <input type="submit" value="Confirm delete" class="btn btn-danger col-4">
@@ -19,7 +19,7 @@
 
             </div>
         </div>
-        <a href="{% url 'app_admin:food_list' %}">Toidukategooriate nimekiri</a>
+        <a href="{% url 'app_admin:heading_list' %}">Toidude nimekiri</a>
     </div>
     </div>
 {% endblock %}

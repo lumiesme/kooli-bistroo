@@ -15,12 +15,12 @@
                 <tbody>
                 {% for category in categories %} {# default is object_list (author) must be views.py #}
                 	<tr>
-                        <td>{{ category.number }}</td>
+                    <td>{{ category.id }}</td>
                     <td>{{ category.name }}</td>
                     <td class="text/center">
                         {% if user.is_authenticated %}
-                        <a href="{% url 'app_admin:food_update' pk=category.id %}" class="text-warning">Uuenda kategooria nimi</a>
-                        <a href="{% url 'app_admin:food_delete' pk=category.id %}" class="text-danger">Kustuta kategooria</a>
+                        <a href="{% url 'app_admin:category_update' pk=category.id %}" class="text-warning">Uuenda kategooria nime</a>
+                        <a href="{% url 'app_admin:category_delete' pk=category.id %}" class="text-danger">Kustuta kategooria</a>
                         {% endif %}
                     </td>
                     </tr>
@@ -29,7 +29,6 @@
                 </tbody>
             </table>
             <a href="{% url 'app_admin:category_create' %}">Lisa uus kategooria</a>
-            <a href="{% url 'app_admin:food_create' %}">Lisa uus toit kategooriasse</a>
         </div>
     </div>
     </div>

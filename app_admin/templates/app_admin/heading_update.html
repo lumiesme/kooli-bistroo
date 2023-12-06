@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Editing menu for {{ heading }}{% endblock %}
+
+{% block content %}
+  <form action="" method="post" enctype="multipart/form-data">
+
+    {% for hidden_field in form.hidden_fields %}
+      {{ hidden_field.errors }}
+      {{ hidden_field }}
+    {% endfor %}
+
+    {% csrf_token %}
+
+    {{ form.management_form }}
+    {{ form.non_form_errors }}
+
+    <h3>Uuenda menuud</h3>
+    {% for menu_form in form.forms %}
+      <hr>
+      <h5>
+        {% if menu_form.instance.id %}
+          Book: {{ menu_form.instance.title|title }}
+        {% else %}
+          {% if form.forms|length > 1 %}
+            Lisa uus toit menuusse
+          {% else %}
+            Lisa uus toit
+          {% endif %}
+        {% endif %}
+      </h5>
+      {% for hidden_field in menuform.hidden_fields %}
+        {{ hidden_field.errors }}
+      {% endfor %}
+      <table>
+        {{ menuform.as_table }}
+      </table>
+    {% endfor %}
+    <hr>
+    <p>
+      <button type="submit" value="Update collection" class="btn btn-primary w-100 mb-3">Update Collection</button>
+      <a href="{{ heading.get_absolute_url  }}" role="button" class="btn btn-secondary w-100">Cancel</a>
+    </p>
+  </form>
+
+{% endblock content %}

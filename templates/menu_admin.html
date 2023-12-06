@@ -9,23 +9,21 @@
                <i class="bi bi-utensils"></i> Toidukategooriad
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'app_admin:food_list' %}">Toidukategooriate nimekiri</a></li>
+            <li><a class="dropdown-item" href="{% url 'app_admin:category_list' %}">Toidukategooriate nimekiri</a></li>
             <li><a class="dropdown-item" href="{% url 'app_admin:category_create' %}">Lisa toitude kategooriate nimetusi</a></li>
           </ul>
         </li>
 
               <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button"  data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-utensils"></i> Toidunimetused
+              <i class="bi bi-utensils"></i> Menuud
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'app_admin:foods_name_listing' %}">Toidude nimekiri</a></li>
-            <li><a class="dropdown-item" href="{% url  'app_admin:food_create' %}">Lisa toitude nimetusi</a></li>
+            <li><a class="dropdown-item" href="{% url 'app_admin:heading_list' %}">menuu pealkirjad</a></li>
+            <li><a class="dropdown-item" href="{% url  'app_admin:heading_create' %}">Lisa uus menuu peakiri</a></li>
           </ul>
         </li>
-        <a class="nav-link" href="{% url 'app_admin:todays_menu_list' %}">Menuud</a>
-        <a class="nav-link" href="{% url 'app_admin:menu_add' %}">Lisa uus menuu</a>
-        <a class="nav-link" href="{% url 'app_admin:menu_header' %}">Menüü paise valik</a>
+        <a class="nav-link" href="{% url 'app_admin:menu_add' %}">poolik</a>
 
     	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>
     {% else %}

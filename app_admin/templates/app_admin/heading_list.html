@@ -1,0 +1,35 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <h3>Menuud</h3>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr class="text-center">
+                        <th>id</th>
+                        <th>Menuu pealkiri</th>
+                        <th>Tegevus</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for menuitem in menuitems %}
+                        <tr>
+                            <td>{{ menuitem.id }}</td>
+                            <td>{{ menuitem.menu }}</td>
+                            <td class="text-center">
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'app_admin:heading_update' pk=heading.id %}" class="text-warning">Uuenda pealkirja</a>
+                                    <a href="{% url 'app_admin:heading_delete' pk=heading.id %}" class="text-danger">Kustuta pealkiri</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <a href="{% url 'app_admin:heading_create' %}">Lisa uus pealkiri</a>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

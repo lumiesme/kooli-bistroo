@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.urls import reverse
 
-from .models import Category, FoodsListing
+from .models import Category, Heading
 from django.contrib import messages
 from django.views.generic.detail import SingleObjectMixin
 from django.shortcuts import render
@@ -15,13 +15,14 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from django.conf import settings
 from django.core.paginator import Paginator
 from .models import *
+from .forms import MenuFormset
 
 class HomeView(TemplateView):
     template_name = 'app_admin/index.html'
 
-class FoodListView(ListView):
+class CategoryListView(ListView):
     # model_list.html -> student_list.html
-    template_name = 'app_admin/food_list.html'
+    template_name = 'app_admin/category_list.html'
     model = Category # Connected to Models Student-siit tuleb info
     queryset = Category.objects.order_by('name')  # nime jargi sorteeritud, result ordered by name
     context_object_name = 'categories'  # object_list is default
@@ -32,30 +33,31 @@ class CategoryCreateView(CreateView):
     fields = "__all__"
     #form_class = CategoryCreateForm
     model = Category
-    success_url = reverse_lazy('app_admin:food_list')
+    success_url = reverse_lazy('app_admin:category_list')
 
-class FoodUpdateView(UpdateView):
-    template_name = 'app_admin/food_update.html'
+class CategoryUpdateView(UpdateView):
+    template_name = 'app_admin/category_update.html'
     model = Category
     fields = '__all__'
-    success_url = reverse_lazy('app_admin:food_list')
+    success_url = reverse_lazy('app_admin:category_list')
 
-class FoodDeleteView(DeleteView):
-    template_name = 'app_admin/food_delete.html'
+class CategoryDeleteView(DeleteView):
+    template_name = 'app_admin/category_delete.html'
     model = Category
-    success_url = reverse_lazy('app_admin:food_list')
+    success_url = reverse_lazy('app_admin:category_list')
 
-class MenuCategories(CreateView):
-    template_name = 'app_admin/menu_header.html'
-    success_url = reverse_lazy('app_admin:food_list')
-    queryset = Menu.objects.order_by('teema_paev')
+class HeadingCreateView(CreateView):
+    template_name = 'app_admin/heading_create.html'
+    success_url = reverse_lazy('app_admin:heading_list')
+    queryset = MenuItem.objects.order_by('menu__date_id')
     fields = "__all__"
 
-class FoodsList(ListView):
-    template_name = 'app_admin/foods_name_listing.html'
-    model = FoodsListing
-    #queryset = FoodsListing.objects.order_by('toidu_nimetus')
-    context_object_name = 'foods'  # Update this line
+class HeadingListView(ListView):
+    template_name = 'app_admin/heading_list.html'
+    model = Heading
+    fields = '__all__'
+    queryset = Heading.objects.order_by('date')
+
     #paginate_by = 10
 
     def get_context_data(self, **kwargs):
@@ -63,62 +65,58 @@ class FoodsList(ListView):
         # Add any additional context variables here if needed
         return context
 
-
-class Foods(CreateView):
-    template_name = 'app_admin/food_create.html'
-    model = FoodsListing
-    fields = '__all__'
-    # context_object_name = FoodsListing
-    success_url = reverse_lazy('app_admin:foods_name_listing')
-
-class FoodsUpdate(UpdateView):
-    model = FoodsListing
-    template_name = 'app_admin/foods_name_listing_update.html'
+class HeadingUpdateView(UpdateView):
+    model = Heading
+    template_name = 'app_admin/heading_update.html'
     fields = '__all__'  # or fields = ['toidu_nimetus', 'taishind', 'poolhind', 'kategooria']
     success_url = reverse_lazy('app_admin:foods_name_listing')
 
-class FoodsDelete(DeleteView):
-    model = FoodsListing
-    template_name = 'app_admin/foods_name_listing_delete.html'
+class HeadingDeleteView(DeleteView):
+    model = Heading
+    template_name = 'app_admin/heading_delete.html'
     success_url = reverse_lazy('app_admin:foods_name_listing')
 
 
-class TodaysMenuCreateView(CreateView):
-    model = Menu
-    template_name = 'app_admin/todays_menu_create.html'
-    success_url = reverse_lazy('app_admin:todays_menu_list')
-    fields = '__all__'
-
-class TodaysMenuListView(ListView):
-    model = Menu
-    template_name = 'app_admin/todays_menu_list.html'
-    context_object_name = 'menu'  # object_list is default
-    paginate_by = 10  # 10 per page in ListView
-
-    def get_queryset(self):
-        return Menu.objects.order_by('date')  # nime jargi sorteeritud, result ordered by name)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['dates'] = Menu.objects.all()  # Assuming you want to display all dates
-        return context
-class TodaysMenuDetailView(DetailView):
-    model = Menu
-    template_name = 'app_admin/todays_menu_detail.html'
-
-class TodaysMenuUpdateView(UpdateView):
-    model = Menu
-    template_name = 'app_admin/todays_menu_update.html'
-    fields = '__all__'
-    success_url = reverse_lazy('app_admin:todays_menu_list')
-class TodaysMenuDeleteView(DeleteView):
-    model = Menu
-    template_name = 'app_admin/todays_menu_delete.html'
-    fields = '__all__'
-    success_url = reverse_lazy('app_admin:todays_menu_list')
-
-class MenuAddView(CreateView):
-    model = Menu
+class MenuCreateView(CreateView):
+    model = MenuItem
     template_name = 'app_admin/menu_add.html'
-    fields = '__all__'
-    success_url = reverse_lazy('app_admin:todays_menu_list')
+    fields = ['food', 'full_price', "half_price"]
+
+    def form_valid(self, form):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            'The menu has been added'
+        )
+        return super().form_valid(form)
+
+
+class MenuUpdateView(SingleObjectMixin, FormView):
+    model = MenuItem
+    template_name = 'app_admin/menu_update.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=MenuItem.objects.all())
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=MenuItem.objects.all())
+        return super().post(request, *args, **kwargs)
+
+    def get_form(self, form_class=None):
+        return MenuFormset(**self.get_form_kwargs(), instance=self.object)
+
+    def form_valid(self, form):
+        form.save()
+
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            'Changes were saved.'
+        )
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('app_admin:heading_list', kwargs={'pk': self.object.pk})
+

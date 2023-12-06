@@ -4,8 +4,8 @@
     {% csrf_token %}
     {{ form.as_p }}
 
-    {{ menu_formset.management_form }}
-    {% for form in menu_formset.forms %}
+    {{ menuformset.management_form }}
+    {% for form in menuformset.forms %}
       {{ form.as_table }}
     {% endfor %}
 
