@@ -1,0 +1,39 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="col-auto mx-auto">
+            <div class="card col-12 mx-auto">
+                <div class="card-header">
+                    <div class="card-title d-flex justify-content-between align-self-auto">
+                        <h4 class="m-0 mt-2">Menüü detailid</h4>
+                    </div>
+                </div>
+                <div class="table-body mx-4">
+                    <table class="table table">
+                        <thead>
+                            <tr>
+                                <th>Menüü kuupäev</th>
+                                <th>Toidu kategooria</th>
+                                <th>Toidu nimetus</th>
+                                <th>Täishind</th>
+                                <th>Soodushind</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for menu_item in menu.menu_menuitem.all %}
+                                <tr>
+                                    <td>{{ menu.date }}</td>
+                                    <td>{{ menu.category }}</td>
+                                    <td>{{ menu_item.food }}</td>
+                                    <td>{{ menu_item.full_price }}</td>
+                                    <td>{{ menu_item.half_price }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

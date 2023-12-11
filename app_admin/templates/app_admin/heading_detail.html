@@ -1,0 +1,38 @@
+{% extends "base_admin.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="col-auto mx-auto">
+            <div class="card col-12 mx-auto">
+                <div class="card-header">
+                    <div class="card-title d-flex justify-content-between align-self-auto">
+                        <h4 class="m-0 mt-2">Menüü pealkirja detailid</h4>
+                    </div>
+                </div>
+                <div class="table-body mx-4">
+                    <table class="table table">
+                        <thead>
+                            <tr>
+                                <th>Kuupäev</th>
+                                <th>Teemapäev</th>
+                                <th>Peakokk soovitab</th>
+                                <th>Kes tegid</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                                <tr>
+                                    <td>{{ heading.date|date:"d.m.Y" }}</td>
+                                    <td>{{ heading.topic }}</td>
+                                    <td>{{ heading.chef }}</td>
+                                    <td>{{ heading.student }}</td>
+                                </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

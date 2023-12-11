@@ -1,0 +1,57 @@
+{% extends 'base_admin.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-8 mx-auto">
+                <h3>Menuud</h3>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr class="text">
+                            <th>Menuu pealkiri</th>
+                            <th>Kuupäev</th>
+                            <th>Vaata menüüd</th>
+                            <th>Uuenda menüüd</th>
+                            <th>Kustuta menüü</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+{% for menuitem in object_list %}
+    <tr>
+        <td>{{ menuitem.category.name }}</td> <!-- Assuming name is a field in your Menu model, adjust as needed -->
+        <td>{{ menuitem.date }}</td>
+        <td><a href="{% url 'app_admin:menu_detail' pk=menuitem.id %}" class="text-info">Vaata menüüd</a></td>
+        <td><a href="{% url 'app_admin:menu_update' pk=menuitem.id %}" class="text-warning">Uuenda menüüd</a></td>
+        <td><a href="{% url 'app_admin:menu_delete' pk=menuitem.id %}" class="text-danger">Kustuta menüü</a></td>
+    </tr>
+{% endfor %}
+                    </tbody>
+                </table>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">&laquo;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-link text-dark">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <a href="{% url 'app_admin:heading_create' %}">Lisa uus pealkiri</a>
+                <a href="{% url 'app_admin:menu_add' %}">Lisa uus menüü</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

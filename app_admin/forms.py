@@ -1,4 +1,30 @@
+from django import forms
+from django.forms import DateInput
 from django.forms.models import inlineformset_factory
-from .models import MenuItem, Menu
+from .models import MenuItem, Menu, Heading
 
-MenuFormset = inlineformset_factory(parent_model=Menu, model=MenuItem, fields=('menu', 'full_price', 'half_price'))
+
+
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ['date', 'category']
+
+
+
+class MenuItemForm(forms.ModelForm):
+    class Meta:
+        model = MenuItem
+        fields = ['food', 'full_price', 'half_price']
+
+
+MenuFormset = inlineformset_factory(parent_model=Menu, model=MenuItem, fields=('food', 'full_price', 'half_price'))
+
+
+class HeadingForm(forms.ModelForm):
+    class Meta:
+        model = Heading
+        fields = '__all__'
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+        }

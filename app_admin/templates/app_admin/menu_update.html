@@ -1,43 +1,42 @@
-{% extends 'base_admin.html' %}
+<!-- menu_update.html -->
+{% extends "base_admin.html" %}
+
 {% block content %}
-	<form action="" method="post" enctype="multipart/form-data">
-        {% for hidden_field in form.hidden_fields %}
-    {{ hidden_fields.errors }}
-    {{ hidden_field }}
-    {% endfor %}
-
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-        {{form.management_form}}
-    {{ form.non_form_errors }}
 
-    <h3>Muuda menüüd</h3>
-    {% for menu_form in form.forms %}
-    <hr>
-    <h5>
-        {% if menu_form.instance.id %}
-            Menu: {{ menu_form.instance.food|food }}
-            {% else %}
-            {% if form.forms|length > 1 %}
-                lisa uus toit
-                {% else %}
-                Lisa menuu
-                {% endif %}
+    {# Render date and category fields from MenuForm #}
+    <label for="{{ form.date.id_for_label }}">Date:</label>
+    {{ form.date }}
+    <br>
 
+    <label for="{{ form.category.id_for_label }}">Category:</label>
+    {{ form.category }}
+    <br>
 
-        {% endif %}
-    </h5>
-        {% for hidden_field in menu_form.hidden_fields %}
+    {# Render additional fields from MenuItemForm using formsets #}
+    {{ menuitem_formset.management_form }}
+    {% for form in menuitem_formset.forms %}
+      <fieldset>
+        <legend>Lisa toit {{ forloop.counter }}</legend>
 
-    {{ hidden_field.errors }}
+        {{ form.id }} {# Include form ID if needed #}
+
+        {# Render fields from MenuItemForm #}
+        {{ form.food.label_tag }}
+        {{ form.food }}
+        <br>
+
+        {{ form.full_price.label_tag }}
+        {{ form.full_price }}
+        <br>
+
+        {{ form.half_price.label_tag }}
+        {{ form.half_price }}
+        <br>
+      </fieldset>
     {% endfor %}
-    <table>
-        {{ menu_form.as.table }}
-    </table>
-    {% endfor %}
-    <hr>
-    <p>
-        <button type="submit" value="Update" class="btn btn-primary w-100 mb-3">Update</button>
-        <a href="{{ menu.get_absolute_url }}" role="button" class="btn btn-secondary w-100">Cancel</a>
-    </p>
- </form>
-{% endblock content %}
+
+    <button class="btn btn-success mt-3 me-2" type="submit"><i class="bi bi-plus-circle"></i> Update Menu</button>
+  </form>
+{% endblock %}

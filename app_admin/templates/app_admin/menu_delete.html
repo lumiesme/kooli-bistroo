@@ -11,13 +11,13 @@
                         Wherever this category {{ category }} is used, it will be replaced by NULL
                     </div>
                     <p>Are you sure you want to delete the category {{ category }}?</p>
-                    <form method="post" action="{% url 'app_admin:category_delete' category.pk %}">
+                    <form method="post" action="{% url 'app_admin:menu_delete' menu.pk %}">
                         {% csrf_token %}
                         <input type="submit" value="Confirm delete" class="btn btn-danger col-4">
                     </form>
                 </div>
             </div>
-            <a href="{% url 'app_admin:category_list' %}">Toidukategooriate nimekiri</a>
+            <a href="{% url 'app_admin:menu_list' %}">Menüüde nimekiri</a>
         </div>
     </div>
 {% endblock %}

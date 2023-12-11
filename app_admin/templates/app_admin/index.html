@@ -2,7 +2,7 @@
 {% block content %}
 <h2 class="align-left">Menüüde loetelu</h2>
     {% if user.is_authenticated %}
-<a class="navbar-brand" href="{% url 'app_admin:heading_list' %}"> Menu pealkirjad: </a>
+<a class="bi bi-eyeglasses" href="{% url 'app_admin:heading_list' %}" > Vaata menüüsid</a>
 <ul class="pagination">
         {% if page_obj.has_previous %}
             <li class="page-item">
