@@ -6,11 +6,11 @@
     {% csrf_token %}
 
     {# Render date and category fields from MenuForm #}
-    <label for="{{ form.date.id_for_label }}">Date:</label>
+    <label for="{{ form.date.id_for_label }}">Kuupäev:</label>
     {{ form.date }}
     <br>
 
-    <label for="{{ form.category.id_for_label }}">Category:</label>
+    <label for="{{ form.category.id_for_label }}">Kategooria:</label>
     {{ form.category }}
     <br>
 
@@ -34,6 +34,9 @@
         {{ form.half_price.label_tag }}
         {{ form.half_price }}
         <br>
+      {{ form.show_in_menu.label_tag }}
+      {{ form.show_in_menu }}
+      <br>
       </fieldset>
     {% endfor %}
 

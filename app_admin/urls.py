@@ -24,5 +24,8 @@ urlpatterns = [
     path('menu_update/<int:pk>', views.MenuUpdateView.as_view(), name='menu_update'),
     path('menu_delete/<int:pk>', views.MenuDeleteView.as_view(), name='menu_delete'),
 
+    path('archive/', views.ArchivePage.as_view(), name='archive_page'),
+    path('archive_search/', views.SearchResultPage.as_view(), name='archive_search'),
+    path('archive_menu/', views.OldMenuPage.as_view(), name='archive_menu'),
 
 ]

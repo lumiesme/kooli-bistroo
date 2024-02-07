@@ -15,6 +15,10 @@ class Heading(models.Model):
     chef = models.CharField(max_length=100, null=True, blank=True, verbose_name="Peakokk soovitab:")
     student = models.CharField(max_length=100, null=True, blank=True, verbose_name="Kes tegid:")
 
+    def __str__(self):
+        """ Admin page show info """
+        #return f'{self.date}, {self.teema}, {self.soovitab}, {self.valmistas}'
+        return f'{self.date.strftime("%d.%m.%Y")}'
 
     class Meta:
         ordering = ['-date']
@@ -36,7 +40,7 @@ class Menu(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ['date', 'category']
+        ordering = ['-date', 'category']
 
     def get_absolute_url(self):
         return reverse('app_admin:menu_update', kwargs={'pk': self.pk})
@@ -47,10 +51,10 @@ class Menu(models.Model):
 
 class MenuItem(models.Model):
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, related_name='menu_menuitem')
-    food = models.CharField(max_length=255)
-    full_price = models.DecimalField(max_digits=4, decimal_places=2, null=False, blank=True)
-    half_price = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
-    show_in_menu = models.BooleanField(default=True)
+    food = models.CharField(max_length=255, verbose_name="Toit")
+    full_price = models.DecimalField(max_digits=4, decimal_places=2, null=False, blank=True, verbose_name="Suure hind")
+    half_price = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Väikese hind")
+    show_in_menu = models.BooleanField(default=True, verbose_name="Näita menüüs")
 
     class Meta:
         ordering = ['menu']

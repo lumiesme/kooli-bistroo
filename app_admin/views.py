@@ -1,11 +1,16 @@
-from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy
+from datetime import datetime
+from urllib import request
 
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, FormView, DetailView
-from .models import *
+from django.db.models import Count, Q
 from .forms import MenuFormset, MenuForm, HeadingForm
-from .models import MenuItem, Heading, Menu
+from .models import *
+from django.core.exceptions import ObjectDoesNotExist
+
 
 
 
@@ -134,48 +139,103 @@ class MenuUpdateView(UpdateView):
     form_class = MenuForm
     success_url = reverse_lazy('app_admin:menu_list')
 
-
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(queryset=Menu.objects.all())
+        self.menuitem_formset = MenuFormset(instance=self.object)
+        return super().get(request, *args, *kwargs)
+    def post(self, request, *args, **kwargs):
+        self.object= self.get_object(queryset=Menu.objects.all())
+        self.menuitem_formset = MenuFormset(request.POST, instance=self.object)
+        return super().post(request, *args, **kwargs)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menuitem_formset'] = MenuFormset(instance=self.object)
+        context['menuitem_formset'] = self.menuitem_formset
         return context
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        menuitem_formset = context['menuitem_formset']
 
-        if menuitem_formset.is_valid():
-            form.save()
-            menuitem_formset.save()
-
-            messages.success(self.request, 'Menu and menu items were updated successfully.')
-            return super().form_valid(form)
-
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def get_object(self, queryset=None):
-        pk = self.kwargs.get('pk')
-        return get_object_or_404(Menu, pk=pk)
-
-
-class MenuItemUpdateView(FormView):
-    template_name = 'app_admin/menu_update.html'
-    form_class = MenuFormset
-    success_url = reverse_lazy('app_admin:heading_list')
-
-    def form_valid(self, form):
         form.save()
-        messages.success(self.request, 'Menu items were updated successfully.')
-        return super().form_valid(form)
+        self.menuitem_formset.save()
 
-    def get_initial(self):
-        menu_id = self.kwargs.get('pk')
-        menu = get_object_or_404(Menu, pk=menu_id)
-        self.initial = {'menu': menu}
-        return self.initial
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            "Muudatused on salvestatud"
+        )
+        return HttpResponseRedirect(self.get_success_url())
+    def get_success_url(self):
+        return reverse('app_admin:menu_detail', kwargs={'pk': self.object.pk})
+
 
 
 class MenuDeleteView(DeleteView):
     model = Menu
     template_name = 'app_admin/menu_delete.html'
     success_url = reverse_lazy('app_admin:menu_list')
+
+class ArchivePage(ListView):
+    model = Heading
+    template_name = 'app_admin/archive.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ArchivePage, self).get_context_data(**kwargs)
+        context['unique_dates'] = Heading.objects.all()
+        return context
+
+class SearchResultPage(ListView):
+    model = MenuItem
+    template_name = 'app_admin/archive_search.html'
+    allow_empty = False  #tuhje paringuid ei lubata
+
+    # https://labpys.com/how-to-implement-join-operations-in-django-orm/
+    def get_queryset(self):
+        query = self.request.GET.get('q')  # info from form - archive page
+        object_list = None
+        if len(query) > 2:
+            object_list = MenuItem.objects.select_related('menu').filter(food__icontains=query)
+
+        return object_list
+
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            return super(SearchResultPage, self).dispatch(request, *args, **kwargs)
+        except Http404:
+            return redirect('app_admin:archive_page')
+
+class OldMenuPage(ListView):
+    model = Menu
+    template_name = 'app_admin/archive_menu.html'
+
+    def get_context_data(self, **kwargs):
+        all_data = None
+        query = self.request.GET.get('date')
+
+        if not query:
+            query = self.kwargs['date']
+
+        parts = query.split('.')
+        today_string = parts[2] + '-' + parts[1] + '-' + parts[0]
+        #estonian_date = datetime.strptime(today_string, '%Y-%m-%d').strftime('%d.%m.%Y')
+        estonian_date = query
+
+        try:
+            today_menu_id = Heading.objects.get(date=today_string)
+            today_menuheadlines = Heading.objects.filter(date=today_string).values('date', 'topic', 'chef', 'student')
+
+            today_all_categories = Menu.objects.filter(date_id=today_menu_id)
+
+            all_data = (MenuItem.objects.filter(Q(menu_id__in=today_all_categories))
+                        .values('menu_id', 'food', 'full_price', 'half_price', 'show_in_menu',
+                                'menu__category__name', 'id', 'menu__category_id')
+                        .annotate(dcount=Count('menu_id')).order_by('menu__category_id', 'id'))
+        except Menu.DoesNotExist:
+            today_menuheadlines = None
+
+        context = {
+            'object_list': all_data,
+            'menuheadlines': today_menuheadlines,
+            'estonian_date': estonian_date,
+            'today_string': today_string
+        }
+
+        return context

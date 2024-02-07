@@ -25,18 +25,22 @@
 
                 <div class="mb-3">
                     {# Render fields from MenuItemForm #}
-                    <label for="{{ form.food.id_for_label }}" class="form-label">Food:</label>
+                    <label for="{{ form.food.id_for_label }}" class="form-label">Toit:</label>
                     {{ form.food }}
                 </div>
 
                 <div class="mb-3">
-                    <label for="{{ form.full_price.id_for_label }}" class="form-label">Full Price:</label>
+                    <label for="{{ form.full_price.id_for_label }}" class="form-label">Suure hind:</label>
                     {{ form.full_price }}
                 </div>
 
                 <div class="mb-3">
-                    <label for="{{ form.half_price.id_for_label }}" class="form-label">Half Price:</label>
+                    <label for="{{ form.half_price.id_for_label }}" class="form-label">Väikese hind:</label>
                     {{ form.half_price }}
+                </div>
+                <div class="mb-3">
+                    <label for="{{ form.show_in_menu.id_for_label }}" class="form-label">Näita menüüs:</label>
+                    {{ form.show_in_menu }}
                 </div>
             {% endfor %}
         </fieldset>

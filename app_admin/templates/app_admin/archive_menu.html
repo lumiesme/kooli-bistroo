@@ -1,0 +1,32 @@
+{% extends "base_admin.html" %}
+{% block content %}
+	<div class="row col-10 mx-auto mt-2">
+    <h2>Menuu {{ estonian_date }} arhiiv</h2>
+<div class="table-body mx-4">
+                    <table class="table table">
+                        <tbody>
+                            {% if object_list %}
+                                {% regroup object_list by menu__category__name as result %}
+                                <ul>
+                                    {% for menu in result %}
+                                        <li>{{ menu.grouper }}
+                                            <ul>
+                                                {% for m in menu.list %}
+                                                    <li>{{ m.food }}: {{ m.full_price }}{% if m.half_price > 0 %}
+                                                            / {{ m.half_price }}
+                                                        {% endif %}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                            <a href="{% url 'app_admin:archive_page' %}">Tagasi arhiivi</a>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
