@@ -10,9 +10,21 @@ from django.db.models import Count, Q
 from .forms import MenuFormset, MenuForm, HeadingForm
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
+class ManagerRequiredMixin(UserPassesTestMixin):
+    """ Test: user in group Writer"""
+    def test_func(self):
+        return self.request.user.groups.filter(name='Manager').exists()
 
-
+class WriterRequiredMixin(UserPassesTestMixin):
+    """ Test: user in group Writer"""
+    def test_func(self):
+        return self.request.user.groups.filter(name='Writer').exists()
+class EditorRequiredMixin(UserPassesTestMixin):
+    # delete view
+    def test_func(self):
+        return self.request.user.groups.filter(name='Editor').exists()
 
 class HomeView(TemplateView):
     template_name = 'app_admin/index.html'
@@ -24,27 +36,27 @@ class CategoryListView(ListView):
     context_object_name = 'categories'
     paginate_by = 10
 
-class CategoryCreateView(CreateView):
+class CategoryCreateView(ManagerRequiredMixin, WriterRequiredMixin,CreateView):
     template_name = 'app_admin/category_create.html'
     fields = "__all__"
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
 
 
-class CategoryUpdateView(UpdateView):
+class CategoryUpdateView(ManagerRequiredMixin, EditorRequiredMixin, UpdateView):
     template_name = 'app_admin/category_update.html'
     model = Category
     fields = '__all__'
     success_url = reverse_lazy('app_admin:category_list')
 
 
-class CategoryDeleteView(DeleteView):
+class CategoryDeleteView(ManagerRequiredMixin,EditorRequiredMixin, DeleteView):
     template_name = 'app_admin/category_delete.html'
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
 
 
-class HeadingCreateView(CreateView):
+class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin,CreateView):
     model = Heading
     form_class = HeadingForm
     template_name = 'app_admin/heading_create.html'
@@ -52,7 +64,7 @@ class HeadingCreateView(CreateView):
     #queryset = MenuItem.objects.order_by('menu__date_id')
 
 
-class HeadingListView(ListView):
+class HeadingListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/heading_list.html'
     model = Heading
     fields = '__all__'
@@ -67,25 +79,31 @@ class HeadingListView(ListView):
         return context
 
 
-class HeadingDetailView(DetailView):
+class HeadingDetailView(ManagerRequiredMixin, DetailView):
     template_name = 'app_admin/heading_detail.html'
     model = Heading
     context_object_name = 'heading'
 
-class HeadingUpdateView(UpdateView):
+class HeadingUpdateView(ManagerRequiredMixin, UpdateView):
     model = Heading
     form_class = HeadingForm
     template_name = 'app_admin/heading_update.html'
     success_url = reverse_lazy('app_admin:heading_list')
+    def form_valid(self, form):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            f"{form.instance.date.strftime('%d.%m.%Y')} pealkirjad on uuendatud"
+        )
+        return super().form_valid(form)
 
-
-class HeadingDeleteView(DeleteView):
+class HeadingDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     model = Heading
     template_name = 'app_admin/heading_delete.html'
     success_url = reverse_lazy('app_admin:heading_list')
 
 
-class MenuCreateView(CreateView):
+class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Menu
     template_name = 'app_admin/menu_add.html'
     form_class = MenuForm
@@ -114,7 +132,7 @@ class MenuCreateView(CreateView):
         context['menuformset'] = MenuFormset()
         return context
 
-class MenuListView(ListView):
+class MenuListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/menu_list.html'
     model = Menu  # Change the model to Menu
     context_object_name = 'menu_list'
@@ -127,13 +145,13 @@ class MenuListView(ListView):
 
 
 
-class MenuDetailView(DetailView):
+class MenuDetailView(ManagerRequiredMixin, DetailView):
     model = Menu
     template_name = 'app_admin/menu_detail.html'
     context_object_name = 'menu'
 
 
-class MenuUpdateView(UpdateView):
+class MenuUpdateView(ManagerRequiredMixin, UpdateView):
     model = Menu
     template_name = 'app_admin/menu_update.html'
     form_class = MenuForm
@@ -168,7 +186,7 @@ class MenuUpdateView(UpdateView):
 
 
 
-class MenuDeleteView(DeleteView):
+class MenuDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     model = Menu
     template_name = 'app_admin/menu_delete.html'
     success_url = reverse_lazy('app_admin:menu_list')
@@ -182,7 +200,7 @@ class ArchivePage(ListView):
         context['unique_dates'] = Heading.objects.all()
         return context
 
-class SearchResultPage(ListView):
+class SearchResultPage(ManagerRequiredMixin, ListView):
     model = MenuItem
     template_name = 'app_admin/archive_search.html'
     allow_empty = False  #tuhje paringuid ei lubata
@@ -202,7 +220,7 @@ class SearchResultPage(ListView):
         except Http404:
             return redirect('app_admin:archive_page')
 
-class OldMenuPage(ListView):
+class OldMenuPage(ManagerRequiredMixin, ListView):
     model = Menu
     template_name = 'app_admin/archive_menu.html'
 

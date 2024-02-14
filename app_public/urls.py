@@ -8,3 +8,6 @@ urlpatterns = [
 
 
 ]
+
+handler404 = 'app_public.views.error_404'
+handler500 = 'app_public.views.error_500'

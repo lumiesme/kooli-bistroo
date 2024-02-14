@@ -2,6 +2,8 @@ from django.views.generic import TemplateView
 from django.db.models import Q, Count
 from app_admin.models import MenuItem, Menu, Heading
 from datetime import datetime
+from django.shortcuts import render
+
 
 
 class HomeViewPublic(TemplateView):
@@ -35,3 +37,9 @@ class HomeViewPublic(TemplateView):
             'today_string': today_string
         }
         return context
+
+def error_404(request, exception):
+    return render(request, '404.html', {})
+
+def error_500(request):
+    return render(request, '500.html', {})

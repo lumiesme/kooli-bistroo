@@ -2,7 +2,7 @@
   <div class="container">
 
     {% if user.is_authenticated %}
-      <a class="navbar-brand" href="/admin"> Admin </a>
+      <a class="navbar-brand" href="{% url "app_admin:index" %}"> Admin </a>
         <li class="nav-item">
         <a class="nav-link" href="{% url "app_public:index" %}" >Bistroo menüü vaatamine</a>
         </li>
@@ -41,9 +41,13 @@
          <li class="nav-item">
     <a class="nav-link" href="{% url 'app_admin:archive_page' %}">Arhiiv</a>
   </li>
+{% endif %}
+  {% if user.is_authenticated  %}
+      <form action="">
 
+      </form>
     	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>
-    {% else %}
+ {% else %}
         <span class="nav-link">Kui sa soovid menüüd muuta, siis sa pead sisse logima! <a href="{% url 'login' %}">Logi sisse</a></span>
     {% endif %}
       </ul>

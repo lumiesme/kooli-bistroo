@@ -33,6 +33,12 @@ body {
 .sessioon{
     background-color: rgba(220, 220, 220, 0.5);
 }
+
+.blue-box {
+    background-color: #cceeff; /* Blue background color */
+    padding: 10px; /* Add some padding for spacing */
+    border-radius: 5px; /* Add rounded corners */
+}
 .date45Degree {
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);

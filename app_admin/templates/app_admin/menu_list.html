@@ -16,9 +16,12 @@
                         </tr>
                     </thead>
                     <tbody>
+
+
 {% for menuitem in object_list %}
+
     <tr>
-        <td>{{ menuitem.category.name }}</td> <!-- Assuming name is a field in your Menu model, adjust as needed -->
+        <td>{{  menuitem.category.name }}</td> <!-- Assuming name is a field in your Menu model, adjust as needed -->
         <td>{{ menuitem.date }}</td>
         <td><a href="{% url 'app_admin:menu_detail' pk=menuitem.id %}" class="text-info">Vaata menüüd</a></td>
         <td><a href="{% url 'app_admin:menu_update' pk=menuitem.id %}" class="text-warning">Uuenda menüüd</a></td>
