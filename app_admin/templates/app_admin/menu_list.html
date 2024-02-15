@@ -5,30 +5,29 @@
         <div class="row">
             <div class="col-8 mx-auto">
                 <h3>Menuud</h3>
+            <div class="text-bg-info"> Kui soovite menuusse toite lisada, siis valige "muuda menuud" ja lisage toidud.</div>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr class="text">
-                            <th>Menuu pealkiri</th>
                             <th>Kuupäev</th>
+                            <th>Menuu kategooria</th>
                             <th>Vaata menüüd</th>
                             <th>Uuenda menüüd</th>
                             <th>Kustuta menüü</th>
                         </tr>
                     </thead>
                     <tbody>
+    {% for item in object_list %}
+        <tr>
+            <td>{{ item.date }}</td>
+            <td>{{ item.category.name }}</td>
+            <td><a href="{% url 'app_admin:menu_detail' pk=item.id %}" class="text-info">Vaata menüüd</a></td>
+            <td><a href="{% url 'app_admin:menu_update' pk=item.id %}" class="text-warning">Uuenda menüüd</a></td>
+            <td><a href="{% url 'app_admin:menu_delete' pk=item.id %}" class="text-danger">Kustuta menüü</a></td>
+        </tr>
+    {% endfor %}
+</tbody>
 
-
-{% for menuitem in object_list %}
-
-    <tr>
-        <td>{{  menuitem.category.name }}</td> <!-- Assuming name is a field in your Menu model, adjust as needed -->
-        <td>{{ menuitem.date }}</td>
-        <td><a href="{% url 'app_admin:menu_detail' pk=menuitem.id %}" class="text-info">Vaata menüüd</a></td>
-        <td><a href="{% url 'app_admin:menu_update' pk=menuitem.id %}" class="text-warning">Uuenda menüüd</a></td>
-        <td><a href="{% url 'app_admin:menu_delete' pk=menuitem.id %}" class="text-danger">Kustuta menüü</a></td>
-    </tr>
-{% endfor %}
-                    </tbody>
                 </table>
                 <ul class="pagination">
                     {% if page_obj.has_previous %}

@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import DateInput
+from django.forms import DateInput, TextInput
 from django.forms.models import inlineformset_factory
 from .models import MenuItem, Menu, Heading
 
@@ -12,22 +12,22 @@ class MenuForm(forms.ModelForm):
         fields = ['date', 'category']
 
 
-
+# MenuItemFormSet = inlineformset_factory(Menu, MenuItem, form=MenuForm, extra=1, can_delete=False)
 class MenuItemForm(forms.ModelForm):
     class Meta:
         model = MenuItem
         fields = ['food', 'full_price', 'half_price', 'show_in_menu']
 
-
 MenuFormset = inlineformset_factory(parent_model=Menu, model=MenuItem, fields=('food', 'full_price', 'half_price', 'show_in_menu'))
-
 
 class HeadingForm(forms.ModelForm):
     class Meta:
         model = Heading
         fields = ['date', 'topic', 'chef', 'student']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
+            'date': forms.DateInput(attrs={'class': 'form-control', 'id': 'date'}),
+            #'date': DateInput(attrs={'type': 'date', 'class': 'form-control'}, format='%d.%m.%y'),
+            #'date': TextInput(attrs={'type': 'text', 'id': 'date', 'class': 'form-control', 'placeholder': 'Vali kuupaev'}),
         }
     def clean(self):
         super(HeadingForm, self).clean()

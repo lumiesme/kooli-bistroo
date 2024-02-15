@@ -15,6 +15,7 @@
                                 {{ error }}
                             </div>
                         {% endfor %}
+
                         {{ field }}
                     </div>
                 {% endfor %}
@@ -23,6 +24,14 @@
             <p><a href="{% url 'app_admin:heading_list' %}">Menüü nimekirjad</a></p>
         </div>
     </div>
+ <script>
+    $(document).ready(function(){
+        $("#datepicker").datepicker({
+            dateFormat: 'dd.mm.yy'
+        });
+    });
+</script>
+
 {% endblock %}
 
 

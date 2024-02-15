@@ -1,5 +1,7 @@
 {% extends 'base_admin.html' %}
 {% block content %}
+    <div class="fw-bold">Kui soovite lisada sama kuupaeva ja kategooria alla rohkem kui 3 toitu, siis tuled seda teha menuu muutmise lehel!</div>
+    <div></div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
@@ -41,7 +43,9 @@
                 <div class="mb-3">
                     <label for="{{ form.show_in_menu.id_for_label }}" class="form-label">Näita menüüs:</label>
                     {{ form.show_in_menu }}
+
                 </div>
+
             {% endfor %}
         </fieldset>
 

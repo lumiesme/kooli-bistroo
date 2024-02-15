@@ -39,7 +39,7 @@ class HomeViewPublic(TemplateView):
         return context
 
 def error_404(request, exception):
-    return render(request, '404.html', {})
+    return render(request, 'app_public/404.html', {})
 
 def error_500(request):
-    return render(request, '500.html', {})
+    return render(request, 'app_public/500.html', {})

@@ -31,8 +31,6 @@ class Heading(models.Model):
             raise ValidationError('Teemapaeva ja peakoka lahter peavad olema molemad taidetud!')
 
 
-    def __str__(self):
-        return f'{self.date.strftime("%d.%m.%Y")}'
 
 
 class Menu(models.Model):

@@ -134,12 +134,17 @@ class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
 
 class MenuListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/menu_list.html'
-    model = Menu  # Change the model to Menu
+    model = Menu
     context_object_name = 'menu_list'
+
+    def get_queryset(self):
+        # Ensure that Menu objects are properly ordered by date or category
+        queryset = super().get_queryset()
+        queryset = queryset.order_by('date', 'category__name')
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add any additional context variables here if needed
         return context
 
 
@@ -180,6 +185,7 @@ class MenuUpdateView(ManagerRequiredMixin, UpdateView):
             messages.SUCCESS,
             "Muudatused on salvestatud"
         )
+
         return HttpResponseRedirect(self.get_success_url())
     def get_success_url(self):
         return reverse('app_admin:menu_detail', kwargs={'pk': self.object.pk})
