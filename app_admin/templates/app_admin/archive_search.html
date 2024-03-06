@@ -16,7 +16,7 @@
     <tbody>
     {% for food in object_list %}
         <tr>
-            <td class="text-center"><a href="">{{ food.menu.date }}</a></td>
+            <td class="text-center">{{ food.menu.date }}</td>
             <td>{{ food.menu.category }}</td>
             <td>{{ food.food }}</td>
             <td class="text-end">{{ food.full_price }}</td>
@@ -27,6 +27,29 @@
 
     </tbody>
     </table>
+            <ul class="pagination">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo;</a>   <!--laquo teeb 2 noolekest(topeltnooled) vasakulevms, ja lsaquo teeb teisele poole-->
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&lsaquo;</a>
+            </li>
+        {% endif %}
+
+        <li class="page-link text-dark">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </li>
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&rsaquo;</a>  <!--naitab jrg lehte 8hekordne nooleke-->
+            </li>
+             <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+            </li>
+        {% endif %}
+
+  </ul>
     {% endif %}
     </div>
 {% endblock %}

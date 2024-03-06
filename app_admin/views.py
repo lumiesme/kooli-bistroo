@@ -71,7 +71,7 @@ class HeadingListView(ManagerRequiredMixin, ListView):
     queryset = Heading.objects.order_by('date')
     context_object_name = 'heading'
 
-    #paginate_by = 10
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -136,6 +136,7 @@ class MenuListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/menu_list.html'
     model = Menu
     context_object_name = 'menu_list'
+    paginate_by = 10  # 10 per page in ListView
 
     def get_queryset(self):
         # Ensure that Menu objects are properly ordered by date or category
@@ -210,7 +211,7 @@ class SearchResultPage(ManagerRequiredMixin, ListView):
     model = MenuItem
     template_name = 'app_admin/archive_search.html'
     allow_empty = False  #tuhje paringuid ei lubata
-
+    paginate_by = 10
     # https://labpys.com/how-to-implement-join-operations-in-django-orm/
     def get_queryset(self):
         query = self.request.GET.get('q')  # info from form - archive page

@@ -1,11 +1,11 @@
 {% extends 'base_admin.html' %}
-
+{% load is_menu_old %}
 {% block content %}
     <div class="container">
         <div class="row">
             <div class="col-8 mx-auto">
-                <h3>Menuud</h3>
-            <div class="text-bg-info"> Kui soovite menuusse toite lisada, siis valige "muuda menuud" ja lisage toidud.</div>
+                <h3>Menüüd</h3>
+            <div class="text-info"> Kui soovite menüüsse toite lisada, siis valige "uuenda menüüd" ja lisage toidud.</div>
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr class="text">
@@ -22,7 +22,13 @@
             <td>{{ item.date }}</td>
             <td>{{ item.category.name }}</td>
             <td><a href="{% url 'app_admin:menu_detail' pk=item.id %}" class="text-info">Vaata menüüd</a></td>
-            <td><a href="{% url 'app_admin:menu_update' pk=item.id %}" class="text-warning">Uuenda menüüd</a></td>
+
+            <td>
+                {% if not menu.date|striptags|is_menu_old %}
+
+                {% endif %}
+            <a href="{% url 'app_admin:menu_update' pk=item.id %}" class="text-warning">Uuenda menüüd</a>
+            </td>
             <td><a href="{% url 'app_admin:menu_delete' pk=item.id %}" class="text-danger">Kustuta menüü</a></td>
         </tr>
     {% endfor %}

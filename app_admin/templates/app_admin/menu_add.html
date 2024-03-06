@@ -1,10 +1,17 @@
 {% extends 'base_admin.html' %}
 {% block content %}
-    <div class="fw-bold">Kui soovite lisada sama kuupaeva ja kategooria alla rohkem kui 3 toitu, siis tuled seda teha menuu muutmise lehel!</div>
+    <div class="text-info">Kui soovite lisada sama kuupäeva ja kategooria alla rohkem kui 3 toitu,
+        siis saate esialgu lisada 3 ja ülejäänud toidud tuleb lisada menüü muutmise lehel!</div>
     <div></div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-
+      {% if form.non_field_errors %}
+            <div class="alert alert-danger" role="alert">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
         {# Render date and category fields from MenuForm #}
         <div class="mb-3">
             <label for="{{ form.date.id_for_label }}" class="form-label">Date:</label>
@@ -23,6 +30,12 @@
             <legend>Lisa toit</legend>
 
             {% for form in menuformset.forms %}
+                  {# Show errors if any #}
+                        {% for error in field.errors %}
+                            <div class="alert alert-danger mt-1">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
                 {{ form.id }} {# Include form ID if needed #}
 
                 <div class="mb-3">

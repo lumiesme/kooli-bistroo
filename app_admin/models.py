@@ -4,10 +4,11 @@ from django.urls import reverse
 
 class Category(models.Model):
     number = models.PositiveIntegerField(verbose_name="Number")
-    name = models.CharField(max_length=255, unique=True, verbose_name="Uue kategooria nimetus")
+    name = models.CharField(max_length=255, unique=True, verbose_name="Kategooria nimetus")
 
     def __str__(self):
         return self.name
+
 
 class Heading(models.Model):
     date = models.DateField(blank=False, null=False, unique=True, verbose_name="Kuupäev")
