@@ -28,4 +28,6 @@ urlpatterns = [
     path('archive_search/', views.SearchResultPage.as_view(), name='archive_search'),
     path('archive_menu/', views.OldMenuPage.as_view(), name='archive_menu'),
 
+    path('history_menu/menu/date/<str:date>', views.OldMenuPage.as_view(), name='archive_menu'),
+
 ]

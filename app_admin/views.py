@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, FormView, DetailView
 from django.db.models import Count, Q
-from .forms import MenuFormset, MenuForm, HeadingForm
+from .forms import MenuFormset, MenuForm, HeadingForm, CategoryForm
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -38,9 +38,10 @@ class CategoryListView(ListView):
 
 class CategoryCreateView(ManagerRequiredMixin, WriterRequiredMixin,CreateView):
     template_name = 'app_admin/category_create.html'
-    fields = "__all__"
+    form_class = CategoryForm
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
+
 
 
 class CategoryUpdateView(ManagerRequiredMixin, EditorRequiredMixin, UpdateView):
@@ -56,19 +57,18 @@ class CategoryDeleteView(ManagerRequiredMixin,EditorRequiredMixin, DeleteView):
     success_url = reverse_lazy('app_admin:category_list')
 
 
-class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin,CreateView):
+class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Heading
     form_class = HeadingForm
     template_name = 'app_admin/heading_create.html'
     success_url = reverse_lazy('app_admin:heading_list')
-    #queryset = MenuItem.objects.order_by('menu__date_id')
 
 
 class HeadingListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/heading_list.html'
     model = Heading
     fields = '__all__'
-    queryset = Heading.objects.order_by('date')
+    queryset = Heading.objects.order_by('-date')
     context_object_name = 'heading'
 
     paginate_by = 10
@@ -225,7 +225,8 @@ class SearchResultPage(ManagerRequiredMixin, ListView):
         try:
             return super(SearchResultPage, self).dispatch(request, *args, **kwargs)
         except Http404:
-            return redirect('app_admin:archive_page')
+            return redirect('app_admin:archive_search')
+
 
 class OldMenuPage(ManagerRequiredMixin, ListView):
     model = Menu

@@ -9,7 +9,8 @@
             {% for field in form %}
             	<div class="form-field">
                     <label for="{{ field.id_for_label }}" class="fw-bold">{{ field.label }}</label>
-                    {#  show errors IF #}
+
+ {#  show errors IF #}
                     {% for error in field.errors %}
                     	{% if field.errors %}
                     		<div class="alert alert-danger mt-1">
@@ -17,11 +18,12 @@
                             </div>
                     	{% endif %}
                     {% endfor %}
-
                     {{ field }}
                 </div>
             {% endfor %}
+ <div class="mt-3">
 
+            </div>
             <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-2">
         </form>
     <p><a href="{% url 'app_admin:category_list' %}">Kategooriate nimekiri</a></p>
