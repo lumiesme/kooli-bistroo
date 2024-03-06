@@ -37,7 +37,7 @@ class MenuForm(forms.ModelForm):
         category = self.cleaned_data['category']
         if Menu.objects.filter(date=date, category=category).exists():
             raise ValidationError(
-                f"Selle' {category}' kategooriaga menüü antud kuupäevaga juba eksiteerib. Lisage toitusid uuendades menüüd. "
+                f"Selle' {category}' kategooriaga menüü antud kuupäevaga juba eksiteerib. Lisage toitusid juurde menüüd uuendades. "
             )
 
         return cleaned_data
@@ -48,6 +48,7 @@ class MenuItemForm(forms.ModelForm):
         fields = ['food', 'full_price', 'half_price', 'show_in_menu']
 
 MenuFormset = inlineformset_factory(parent_model=Menu, model=MenuItem, fields=('food', 'full_price', 'half_price', 'show_in_menu'))
+
 
 class HeadingForm(forms.ModelForm):
     class Meta:

@@ -9,7 +9,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-
 class Heading(models.Model):
     date = models.DateField(blank=False, null=False, unique=True, verbose_name="Kuupäev")
     topic = models.CharField(max_length=100, null=True, blank=True, verbose_name="Teemapäev")

@@ -5,8 +5,8 @@
         <div class="row">
             <div class="col-8 mx-auto">
                 <h3>Menüüd</h3>
-            <div class="text-info"> Kui soovite menüüsse toite lisada, siis valige "uuenda menüüd" ja lisage toidud.</div>
-                <table class="table table-bordered table-hover">
+                <div class="text-info"> Kui soovite menüüsse toite lisada, siis valige "uuenda menüüd" ja lisage toidud.</div>
+                <table class="mt-3 table table-bordered table-hover">
                     <thead>
                         <tr class="text">
                             <th>Kuupäev</th>
@@ -17,23 +17,21 @@
                         </tr>
                     </thead>
                     <tbody>
-    {% for item in object_list %}
-        <tr>
-            <td>{{ item.date }}</td>
-            <td>{{ item.category.name }}</td>
-            <td><a href="{% url 'app_admin:menu_detail' pk=item.id %}" class="text-info">Vaata menüüd</a></td>
+                        {% for item in object_list %}
+                            <tr>
+                                <td>{{ item.date }}</td>
+                                <td>{{ item.category.name }}</td>
+                                <td><a href="{% url 'app_admin:menu_detail' pk=item.id %}" class="text-info">Vaata menüüd</a></td>
 
-            <td>
-                {% if not menu.date|striptags|is_menu_old %}
-
-                {% endif %}
-            <a href="{% url 'app_admin:menu_update' pk=item.id %}" class="text-warning">Uuenda menüüd</a>
-            </td>
-            <td><a href="{% url 'app_admin:menu_delete' pk=item.id %}" class="text-danger">Kustuta menüü</a></td>
-        </tr>
-    {% endfor %}
-</tbody>
-
+                                <td>
+                                    {% if not item.date|striptags|is_menu_old %}
+                                        <a href="{% url 'app_admin:menu_update' pk=item.id %}" class="text-warning">Uuenda menüüd</a>
+                                    {% endif %}
+                                </td>
+                                <td><a href="{% url 'app_admin:menu_delete' pk=item.id %}" class="text-danger">Kustuta menüü</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
                 <ul class="pagination">
                     {% if page_obj.has_previous %}

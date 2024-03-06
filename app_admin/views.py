@@ -36,13 +36,29 @@ class CategoryListView(ListView):
     context_object_name = 'categories'
     paginate_by = 10
 
-class CategoryCreateView(ManagerRequiredMixin, WriterRequiredMixin,CreateView):
+class CategoryCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     template_name = 'app_admin/category_create.html'
     form_class = CategoryForm
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
 
+    def form_valid(self, form):
+        new_category_sort_id = form.cleaned_data['number']
 
+        if Category.objects.filter(number=new_category_sort_id).exists():
+            messages.error(self.request, 'Selline kategooria number on juba olemas, palun sisesta teine number!')
+            return self.form_invalid(form)
+        else:
+            # Save the form data if it's valid
+            return super().form_valid(form)
+
+    def form_invalid(self, form):
+        if 'name' in form.errors:
+            form.errors.pop('name', None)
+            messages.error(self.request, "Selline toidu kategooria on juba olemas.")
+
+        # Redirect to the form page with the error messages
+        return super().form_invalid(form)
 
 class CategoryUpdateView(ManagerRequiredMixin, EditorRequiredMixin, UpdateView):
     template_name = 'app_admin/category_update.html'
@@ -120,7 +136,7 @@ class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
 
             # Save the form and handle success messages
             response = super().form_valid(form)
-            messages.success(self.request, 'The menu has been added')
+            messages.success(self.request, 'Menüü on lisatud')
             return response
 
         # If the formset is not valid, delete the menu instance
@@ -160,39 +176,45 @@ class MenuDetailView(ManagerRequiredMixin, DetailView):
 class MenuUpdateView(ManagerRequiredMixin, UpdateView):
     model = Menu
     template_name = 'app_admin/menu_update.html'
-    form_class = MenuForm
+    form_class = MenuFormset
     success_url = reverse_lazy('app_admin:menu_list')
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(queryset=Menu.objects.all())
         self.menuitem_formset = MenuFormset(instance=self.object)
-        return super().get(request, *args, *kwargs)
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
-        self.object= self.get_object(queryset=Menu.objects.all())
-        self.menuitem_formset = MenuFormset(request.POST, instance=self.object)
-        return super().post(request, *args, **kwargs)
+        self.object = self.get_object(queryset=Menu.objects.all())
+        form = self.form_class(request.POST, instance=self.object)
+
+        if form.is_valid():
+            # Clear existing menu items
+            MenuItem.objects.filter(menu=self.object).delete()
+
+            # Save the formset data
+            for form in form:
+                if form.cleaned_data.get('food'):
+                    food_name = form.cleaned_data['food']
+                    # Ensure only unique food items are saved
+                    if not MenuItem.objects.filter(menu=self.object, food=food_name).exists():
+                        form.instance.menu = self.object
+                        form.save()
+
+            messages.success(request, 'Menu updated successfully')
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            return self.form_invalid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menuitem_formset'] = self.menuitem_formset
         return context
 
-    def form_valid(self, form):
-
-        form.save()
-        self.menuitem_formset.save()
-
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            "Muudatused on salvestatud"
+    def form_invalid(self, form):
+        return self.render_to_response(
+            self.get_context_data(form=form)
         )
-
-        return HttpResponseRedirect(self.get_success_url())
-    def get_success_url(self):
-        return reverse('app_admin:menu_detail', kwargs={'pk': self.object.pk})
-
-
-
 class MenuDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     model = Menu
     template_name = 'app_admin/menu_delete.html'
@@ -216,6 +238,7 @@ class SearchResultPage(ManagerRequiredMixin, ListView):
     def get_queryset(self):
         query = self.request.GET.get('q')  # info from form - archive page
         object_list = None
+
         if len(query) > 2:
             object_list = MenuItem.objects.select_related('menu').filter(food__icontains=query)
 
@@ -225,7 +248,7 @@ class SearchResultPage(ManagerRequiredMixin, ListView):
         try:
             return super(SearchResultPage, self).dispatch(request, *args, **kwargs)
         except Http404:
-            return redirect('app_admin:archive_search')
+            return redirect('app_admin:archive_page')
 
 
 class OldMenuPage(ManagerRequiredMixin, ListView):

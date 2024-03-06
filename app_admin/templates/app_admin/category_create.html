@@ -1,33 +1,34 @@
 {% extends 'base_admin.html' %}
 
 {% block content %}
-	<div class="row">
-    <div class="col-5 mx-auto">
-        <h3>Lisa uus toit kategooriasse</h3>
-        <form method="post" class="form">
-            {% csrf_token %}
-            {% for field in form %}
-            	<div class="form-field">
-                    <label for="{{ field.id_for_label }}" class="fw-bold">{{ field.label }}</label>
-
- {#  show errors IF #}
-                    {% for error in field.errors %}
-                    	{% if field.errors %}
-                    		<div class="alert alert-danger mt-1">
-                            {{ error }}
-                            </div>
-                    	{% endif %}
+    <div class="row">
+        <div class="col-5 mx-auto">
+            <h3>Lisa uus toit kategooriasse</h3>
+            <div class="card-body">
+                {% if messages %}
+                    <div class="mt-3">
+                        <div class="alert alert-danger">
+                                {% for message in messages %}
+                                    {% if message.tags %}
+                                    {% endif %}
+                                    {{ message }}
+                                {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+                <form method="post" class="form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-field">
+                            <label for="{{ field.id_for_label }}" class="fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                        </div>
                     {% endfor %}
-                    {{ field }}
-                </div>
-            {% endfor %}
- <div class="mt-3">
+                    <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-2">
+                </form>
 
+                <p><a href="{% url 'app_admin:category_list' %}">Kategooriate nimekiri</a></p>
             </div>
-            <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-2">
-        </form>
-    <p><a href="{% url 'app_admin:category_list' %}">Kategooriate nimekiri</a></p>
-
-    </div>
+        </div>
     </div>
 {% endblock %}

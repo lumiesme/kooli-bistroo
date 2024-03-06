@@ -1,8 +1,11 @@
 {% extends 'base_admin.html' %}
 {% block content %}
-    <div class="text-info">Kui soovite lisada sama kuupäeva ja kategooria alla rohkem kui 3 toitu,
+    <div class="text">Kui soovite lisada sama kuupäeva ja kategooria alla rohkem kui 3 toitu,
         siis saate esialgu lisada 3 ja ülejäänud toidud tuleb lisada menüü muutmise lehel!</div>
-    <div></div>
+    <div class="mt-3"></div>
+    <div>
+
+    </div>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
       {% if form.non_field_errors %}
