@@ -8,7 +8,7 @@
                 </div>
                 <div class="card-body">
                     <div class="alert alert-info" role="alert">
-                        Kõikjal, kus see kategooria "{{ category }}" asendatakse see sõnaga NULL
+                        Kõikjal, kus see kategooria "{{ category }}" kasutusel on, kustutatakse see jäädavalt
                     </div>
                     <p>Kas oled kindel, et soovid kategooriat  "{{ category }}" kustutada? Kustutamist tagasi võtta ei saa</p>
                     <form method="post" action="{% url 'app_admin:category_delete' category.pk %}">

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 from urllib import request
 
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, FormView, DetailView
-from django.db.models import Count, Q
+from django.db.models import Count, Q, ProtectedError
 from .forms import MenuFormset, MenuForm, HeadingForm, CategoryForm
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
@@ -67,19 +67,44 @@ class CategoryUpdateView(ManagerRequiredMixin, EditorRequiredMixin, UpdateView):
     success_url = reverse_lazy('app_admin:category_list')
 
 
-class CategoryDeleteView(ManagerRequiredMixin,EditorRequiredMixin, DeleteView):
+class CategoryDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     template_name = 'app_admin/category_delete.html'
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
 
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
 
+        try:
+            # Check if the category is used in any menu
+            if Menu.objects.filter(category=self.object).exists():
+                messages.error(request, f"The category '{self.object.name}' is already used somewhere and cannot be deleted.")
+            else:
+                self.object.delete()
+                messages.success(request, f"The category '{self.object.name}' has been successfully deleted.")
+        except ProtectedError:
+            messages.error(request, "This category is tied to one or more menus.")
+
+        return HttpResponseRedirect(success_url)
 class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Heading
     form_class = HeadingForm
     template_name = 'app_admin/heading_create.html'
     success_url = reverse_lazy('app_admin:heading_list')
 
-
+    def post(self, request, *args, **kwargs):
+        my_data = request.POST
+        my_date = my_data['date']
+        print(my_date)
+        try:
+            new_date = datetime.datetime.strptime(my_date, '%d.%m.%Y').strftime('%Y-%m-%d')
+            my_data._mutable = True
+            my_data['date'] = new_date
+            my_data._mutable = False
+        except ValueError:
+            return super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
 class HeadingListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/heading_list.html'
     model = Heading
@@ -138,16 +163,25 @@ class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
             response = super().form_valid(form)
             messages.success(self.request, 'Menüü on lisatud')
             return response
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['date'].widget.attrs['min'] = str(date.today())  # Set min date to today
 
-        # If the formset is not valid, delete the menu instance
-        menu.delete()
-        return self.form_invalid(form)
+        # Exclude past dates from the Heading model
+        past_dates = Heading.objects.filter(date__lt=date.today()).values_list('date', flat=True)
+        form.fields['date'].queryset = form.fields['date'].queryset.exclude(date__in=past_dates)
+
+        return form
+
+    def form_invalid(self, form):
+        # Capture the ValidationError and add it to the form's errors
+        messages.error(self.request, form.errors['__all__'][0])
+        return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menuformset'] = MenuFormset()
         return context
-
 class MenuListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/menu_list.html'
     model = Menu

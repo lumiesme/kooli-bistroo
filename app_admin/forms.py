@@ -2,6 +2,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.forms import DateInput
 from django.forms.models import inlineformset_factory
+from django.template.backends import django
+
 from .models import MenuItem, Menu, Heading, Category
 
 class CategoryForm(forms.ModelForm):
@@ -11,7 +13,7 @@ class CategoryForm(forms.ModelForm):
 
         widgets = {
             'number': forms.NumberInput(attrs={'type': 'number', 'class': 'form-control', 'placeholder': 'Sisesta ID'}),
-            'name': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': ''}),
+            'name': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': 'Sisesta kategooria nimetus'}),
 
         }
 
@@ -55,11 +57,15 @@ class HeadingForm(forms.ModelForm):
         model = Heading
         fields = ['date', 'topic', 'chef', 'student']
         widgets = {
-            'date': forms.DateInput(format='%d/%m/%Y', attrs={'type': 'date', 'class': 'form-control', 'id': 'date'}),
+            'date': forms.DateInput(attrs={'type': 'text', 'id': 'date', 'class': 'form-control',
+                                           'placeholder': 'Kliki kuupäeva valimiseks', 'readonly': 'readonly'},
+                                    format='%d.%m.%Y'),
+            #'date': forms.DateInput( attrs={'type': 'date', 'class': 'form-control', 'id': 'date'}, format='%dd.%mm.%YYYY'),
             'topic': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': ''}),
             'chef': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
             'student': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
             # Other widget definitions for other fields...
+
         }
 
     def clean(self):

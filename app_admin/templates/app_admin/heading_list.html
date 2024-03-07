@@ -1,14 +1,14 @@
 {% extends 'base_admin.html' %}
 {% block content %}
-    <div class="container">
+    <div class="container mt-1">
         <div class="row">
             <div class="col-8 mx-auto">
-                <h3>Menuud</h3>
-                <div class="text-info">Iga päeva menüü algab pealkirja lisamisega. Minimaalne sisestus piirdub ainult kuupäeva valimisega. Muuta saab ainult jooksva päeva infot.Kustutades mõne päeva pealkirja, kustutatakse ka kogu selle päeva menüü.</div><div class="text-danger"> Kustutamist ei saa tagasi võtta!</div>
-                <table class="table table-bordered table-hover">
+                <h3>Menüüd</h3>
+                <div class="text-info">Iga päeva menüü algab pealkirja lisamisega. Minimaalne sisestus piirdub ainult kuupäeva valimisega. Muuta saab ainult jooksva päeva infot. Kustutades mõne päeva pealkirja, kustutatakse ka kogu selle päeva menüü.</div><div class="text-danger mt-2"> Kustutamist ei saa tagasi võtta!</div>
+                <table class=" mt-2 table table-bordered table-hover">
                     <thead>
                     <tr class="text">
-                        <th>Menuu pealkiri</th>
+                        <th>Menüü kuupäev</th>
                         <th>Vaata</th>
                         <th>Uuenda</th>
                         <th>Kustuta</th>
@@ -55,6 +55,7 @@
 
   </ul>
                 <a href="{% url 'app_admin:heading_create' %}">Lisa uus pealkiri</a>
+            <div class="col-2"></div>
                 <a href="{% url 'app_admin:menu_add' %}">Lisa uus menüü</a>
 
             </div>

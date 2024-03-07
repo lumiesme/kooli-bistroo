@@ -3,7 +3,8 @@
 {% block content %}
     <div class="row">
         <div class="col-5 mx-auto">
-            <h3>Lisa uus toit kategooriasse</h3>
+            <h3>Lisa uus kategooria</h3>
+            <div class="mt-3 text-info">Siin saad lisada ükshaaval toidu kategooriaid</div>
             <div class="card-body">
                 {% if messages %}
                     <div class="mt-3">
@@ -16,7 +17,7 @@
                         </div>
                     </div>
                 {% endif %}
-                <form method="post" class="form">
+                <form method="post" class="form mt-3">
                     {% csrf_token %}
                     {% for field in form %}
                         <div class="form-field">
@@ -24,7 +25,7 @@
                             {{ field }}
                         </div>
                     {% endfor %}
-                    <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-2">
+                    <input type="submit" value="Lisa uus toit kategooriasse" class="btn btn-primary mt-4">
                 </form>
 
                 <p><a href="{% url 'app_admin:category_list' %}">Kategooriate nimekiri</a></p>

@@ -9,10 +9,11 @@
                 {% for field in form %}
                     <div class="form-field">
                         <label for="{{ field.id_for_label }}" class="fw-bold">{{ field.label }}</label>
-                     <script>
-    $(document).ready(function(){
-        $("#datepicker").datepicker({
-            dateFormat: 'dd.mm.yy'
+<script>
+    $(function () {
+        $("#date").datepicker({
+            // dateFormat: "yy-mm-dd"
+            dateFormat: "dd.mm.yy"
         });
     });
 </script>
