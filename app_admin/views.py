@@ -11,6 +11,8 @@ from .forms import MenuFormset, MenuForm, HeadingForm, CategoryForm
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import ProtectedError
+
 
 class ManagerRequiredMixin(UserPassesTestMixin):
     """ Test: user in group Writer"""
@@ -72,21 +74,17 @@ class CategoryDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     model = Category
     success_url = reverse_lazy('app_admin:category_list')
 
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
+    def get_success_url(self):
+        return reverse_lazy('app_admin:category')
 
+    def post(self, request, *args, **kwargs):
         try:
-            # Check if the category is used in any menu
-            if Menu.objects.filter(category=self.object).exists():
-                messages.error(request, f"The category '{self.object.name}' is already used somewhere and cannot be deleted.")
-            else:
-                self.object.delete()
-                messages.success(request, f"The category '{self.object.name}' has been successfully deleted.")
+            return self.delete(request, *args, **kwargs)
         except ProtectedError:
-            messages.error(request, "This category is tied to one or more menus.")
+            messages.warning(request, "Seda kategooriat ei saa kustutada, sest see mingi menüüga juba seotud.")
+            return redirect('app_admin:category_list')
 
-        return HttpResponseRedirect(success_url)
+
 class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Heading
     form_class = HeadingForm
@@ -161,7 +159,7 @@ class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
 
             # Save the form and handle success messages
             response = super().form_valid(form)
-            messages.success(self.request, 'Menüü on lisatud')
+           #messages.success(self.request, 'Menüü on lisatud')
             return response
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
