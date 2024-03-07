@@ -75,7 +75,7 @@ class CategoryDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     success_url = reverse_lazy('app_admin:category_list')
 
     def get_success_url(self):
-        return reverse_lazy('app_admin:category')
+        return reverse_lazy('app_admin:category_list')
 
     def post(self, request, *args, **kwargs):
         try:
