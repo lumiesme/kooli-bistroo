@@ -1,7 +1,8 @@
 {% extends 'base_admin.html' %}
 {% block content %}
+{% if user.is_authenticated %}
 <h2 class="align-left">Menüüde loetelu</h2>
-    {% if user.is_authenticated %}
+
         <h5 class="align-left mt-5 col-5">Allolevalt lingilt saate vaadata juba loodud menüüsid: </h5>
 
 <a class="bi bi-eyeglasses" href="{% url 'app_admin:menu_list' %}" > Vaata loodud menüüsid</a>

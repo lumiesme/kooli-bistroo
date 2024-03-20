@@ -1,9 +1,11 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, View
 from django.db.models import Q, Count
 from app_admin.models import MenuItem, Menu, Heading
 from datetime import datetime
 from django.shortcuts import render
-
+from django.contrib.auth.views import LogoutView
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
 
 
 class HomeViewPublic(TemplateView):
@@ -43,3 +45,14 @@ def error_404(request, exception):
 
 def error_500(request):
     return render(request, 'app_public/500.html', {})
+
+class CustomLogoutView(LogoutView):
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'GET':
+            # Perform logout actions for GET request
+            self.logout(request)
+            # Redirect to the root URL
+            return HttpResponseRedirect('/')
+        else:
+            # For other HTTP methods, let the parent class handle it
+            return super().dispatch(request, *args, **kwargs)

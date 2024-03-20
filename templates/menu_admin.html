@@ -25,8 +25,8 @@
               <i class="bi bi-utensils"></i> Menüü pealkirjad
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'app_admin:heading_list' %}">menuu pealkirjad</a></li>
-            <li><a class="dropdown-item" href="{% url  'app_admin:heading_create' %}">Lisa uus menuu peakiri</a></li>
+            <li><a class="dropdown-item" href="{% url 'app_admin:heading_list' %}">Menüü pealkirjad</a></li>
+            <li><a class="dropdown-item" href="{% url  'app_admin:heading_create' %}">Lisa uus menüü peakiri</a></li>
           </ul>
         </li>
 
@@ -44,17 +44,35 @@
          <li class="nav-item">
     <a class="nav-link" href="{% url 'app_admin:archive_page' %}">Arhiiv</a>
   </li>
+    <span class="nav-link">Tere tulemast {{ user.username }}! </span>
+    <span id="logout-link" class="nav-link alert-info"><a href="#">Logi välja </a></span>
+{% else %}
+    <span class="nav-link">Kui sa soovid menüüd muuta, siis sa pead sisse logima! <a href="{% url 'login' %}">Logi sisse</a></span>
 {% endif %}
-  {% if user.is_authenticated  %}
-      <form action="">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const logoutLink = document.getElementById('logout-link');
+    if (logoutLink) {
+        logoutLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch('{% url "logout" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            }).then(response => {
+                window.location.href = '/';
+            }).catch(error => {
+                console.error('Error logging out:', error);
+            });
+        });
+    }
+});
+</script>
 
-      </form>
-    	<span class="nav-link">Tere tulemast {{ user.username }}! <a href="{% url 'logout' %}">Logi välja</a></span>
- {% else %}
-        <span class="nav-link">Kui sa soovid menüüd muuta, siis sa pead sisse logima! <a href="{% url 'login' %}">Logi sisse</a></span>
-    {% endif %}
+
+
       </ul>
     </div>
   </div>
 </nav>
-

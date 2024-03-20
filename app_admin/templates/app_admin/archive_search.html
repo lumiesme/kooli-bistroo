@@ -6,10 +6,10 @@
     <table class="table table-bordered table-hover">
         <thead>
         <tr class="text-center">
-            <th class="col-1">Kuupaev</th>
+            <th class="col-1">Kuupäev</th>
             <th class="col-3">Kategooria</th>
             <th>Toiduhind</th>
-            <th class="col-1">Taishind</th>
+            <th class="col-1">Täishind</th>
             <th class="col-1">Poolikhind</th>
         </tr>
         </thead>
@@ -39,7 +39,7 @@
         {% endif %}
 
         <li class="page-link text-dark">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            Lehekülg {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
         </li>
         {% if page_obj.has_next %}
             <li class="page-item">

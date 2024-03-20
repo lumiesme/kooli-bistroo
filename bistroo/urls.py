@@ -17,11 +17,18 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import RedirectView
+from django.contrib.auth.views import LogoutView
+from app_public.views import error_404, error_500
+from app_public.views import CustomLogoutView
+from django.urls import reverse_lazy
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('app_public/', include('app_public.urls')),
-    path('app_admin/', include('app_admin.urls')),
-    path('', RedirectView.as_view(url='app_admin')),
+    path("app_admin/", include("app_admin.urls")),
+    path("", include("app_public.urls")),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/logout/', CustomLogoutView.as_view(), name='logout'),
+    path("", RedirectView.as_view(url="app_public")),  # Redirect root URL to app_public
 ]

@@ -1,4 +1,4 @@
-from datetime import datetime, date
+import datetime
 from urllib import request
 
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,12 +7,12 @@ from django.http import HttpResponseRedirect, Http404
 from django.contrib import messages
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, FormView, DetailView
 from django.db.models import Count, Q, ProtectedError
-from .forms import MenuFormset, MenuForm, HeadingForm, CategoryForm
+from .forms import MenuFormset, MenuForm, HeadingForm, CategoryForm, HeadingUpdateForm
 from .models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import ProtectedError
-
+from datetime import date
 
 class ManagerRequiredMixin(UserPassesTestMixin):
     """ Test: user in group Writer"""
@@ -85,6 +85,7 @@ class CategoryDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
             return redirect('app_admin:category_list')
 
 
+
 class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Heading
     form_class = HeadingForm
@@ -103,6 +104,8 @@ class HeadingCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
         except ValueError:
             return super().post(request, *args, **kwargs)
         return super().post(request, *args, **kwargs)
+
+
 class HeadingListView(ManagerRequiredMixin, ListView):
     template_name = 'app_admin/heading_list.html'
     model = Heading
@@ -123,24 +126,31 @@ class HeadingDetailView(ManagerRequiredMixin, DetailView):
     model = Heading
     context_object_name = 'heading'
 
-class HeadingUpdateView(ManagerRequiredMixin, UpdateView):
+
+class HeadingUpdateView(ManagerRequiredMixin, WriterRequiredMixin, UpdateView):
     model = Heading
-    form_class = HeadingForm
+    form_class = HeadingUpdateForm
     template_name = 'app_admin/heading_update.html'
     success_url = reverse_lazy('app_admin:heading_list')
-    def form_valid(self, form):
-        messages.add_message(
-            self.request,
-            messages.SUCCESS,
-            f"{form.instance.date.strftime('%d.%m.%Y')} pealkirjad on uuendatud"
-        )
-        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        my_data = request.POST
+        my_date = my_data['date']
+        print(my_date)
+        try:
+            new_date = datetime.datetime.strptime(my_date, '%d.%m.%Y').strftime('%Y-%m-%d')
+            my_data._mutable = True
+            my_data['date'] = new_date
+            my_data._mutable = False
+        except ValueError:
+            return super().post(request, *args, **kwargs)
+        return super().post(request, *args, **kwargs)
+
 
 class HeadingDeleteView(ManagerRequiredMixin, EditorRequiredMixin, DeleteView):
     model = Heading
     template_name = 'app_admin/heading_delete.html'
     success_url = reverse_lazy('app_admin:heading_list')
-
 
 class MenuCreateView(ManagerRequiredMixin, WriterRequiredMixin, CreateView):
     model = Menu

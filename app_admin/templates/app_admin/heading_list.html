@@ -9,25 +9,24 @@
                     <thead>
                     <tr class="text">
                         <th>Menüü kuupäev</th>
-                        <th>Vaata</th>
-                        <th>Uuenda</th>
-                        <th>Kustuta</th>
+                        <th>Teema</th>
+                        <th>Peakokk soovitab</th>
+                        <th>Kes tegid</th>
+                        <th>Tegevused</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for heading in heading %}
                         <tr>
-                        <td>{{ heading.date|date:"d.m.Y" }}</td>
-                            <td class="text-center">
-                                {% if user.is_authenticated %}
-
-                                    <a href="{% url 'app_admin:heading_detail' pk=heading.id %}" class="text-info">Vaata menüü pealkirja</a>
-                                    <td><a href="{% url 'app_admin:heading_update' pk=heading.id %}" class="text-warning">Uuenda menüü pealkirja</a>
-                                    <td><a href="{% url 'app_admin:heading_delete' pk=heading.id %}" class="text-danger">Kustuta menüü pealkiri</a></td>
-                                {% endif %}
+                            <td>{{ heading.date|date:"d.m.Y" }}</td>
+                            <td>{{ heading.topic }}</td>
+                            <td>{{ heading.chef }}</td>
+                            <td>{{ heading.student }}</td>
+                            <td>
+                                <a href="{% url 'app_admin:heading_update' pk=heading.id %}" class="btn btn-warning btn-sm">Uuenda</a>
+                                <a href="{% url 'app_admin:heading_delete' pk=heading.id %}" class="btn btn-danger btn-sm">Kustuta</a>
                             </td>
                         </tr>
-
                     {% endfor %}
                     </tbody>
                 </table>
@@ -42,7 +41,7 @@
         {% endif %}
 
         <li class="page-link text-dark">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            Lehekülg {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
         </li>
         {% if page_obj.has_next %}
             <li class="page-item">

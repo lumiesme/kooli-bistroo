@@ -30,8 +30,8 @@
                     <td>{{ category.name }}</td>
                     <td class="text/center">
 
-                        <a href="{% url 'app_admin:category_update' pk=category.id %}" class="text-warning mt-1">Uuenda kategooria nime</a>
-                        <a href="{% url 'app_admin:category_delete' pk=category.id %}" class="text-danger">Kustuta kategooria</a>
+                        <a href="{% url 'app_admin:category_update' pk=category.id %}" class="btn btn-warning btn-sm">Uuenda kategooria nime</a>
+                        <a href="{% url 'app_admin:category_delete' pk=category.id %}" class="btn btn-danger btn-sm">Kustuta kategooria</a>
 
                         {% endif %}
                     </td>
@@ -51,7 +51,7 @@
         {% endif %}
 
         <li class="page-link text-dark">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            Lehekülg {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
         </li>
         {% if page_obj.has_next %}
             <li class="page-item">

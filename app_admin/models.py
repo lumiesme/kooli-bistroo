@@ -28,11 +28,7 @@ class Heading(models.Model):
 
     def clean(self):
         if(self.topic is None and self.chef is not None) or (self.topic is not None and self.chef is None):
-            raise ValidationError('Teemapaeva ja peakoka lahter peavad olema molemad taidetud!')
-
-
-
-
+            raise ValidationError('Teemapäeva ja peakoka lahter peavad olema mõlemad täidetud!')
 class Menu(models.Model):
     date = models.ForeignKey(Heading, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -54,6 +50,11 @@ class MenuItem(models.Model):
     half_price = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Väikese hind")
     show_in_menu = models.BooleanField(default=True, verbose_name="Näita menüüs")
 
+    def save(self, *args, **kwargs):
+        # Capitalize the first letter of the food name
+        if self.food:
+            self.food = self.food.capitalize()
+        super().save(*args, **kwargs)
     class Meta:
         ordering = ['menu']
 

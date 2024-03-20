@@ -3,8 +3,9 @@ from django.core.exceptions import ValidationError
 from django.forms import DateInput
 from django.forms.models import inlineformset_factory
 from django.template.backends import django
-
+import datetime
 from .models import MenuItem, Menu, Heading, Category
+from datetime import datetime
 
 class CategoryForm(forms.ModelForm):
     class Meta:
@@ -17,16 +18,7 @@ class CategoryForm(forms.ModelForm):
 
         }
 
-        def clean(self):
-            cleaned_data = super(CategoryForm, self).clean()
-            number = self.cleaned_data['number']
-            #category = self.cleaned_data['name']
-            if Menu.objects.filter(number=number).exists():
-                raise ValidationError(
-                    f"Selle '{number}' id-ga kategooriaga on juba olemas! Palun lisage mingi teine ID "
-                )
 
-            return cleaned_data
 
 class MenuForm(forms.ModelForm):
     class Meta:
@@ -55,25 +47,22 @@ MenuFormset = inlineformset_factory(parent_model=Menu, model=MenuItem, fields=('
 class HeadingForm(forms.ModelForm):
     class Meta:
         model = Heading
-        fields = ['date', 'topic', 'chef', 'student']
+        fields = ('date', 'topic', 'chef', 'student')
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'text', 'id': 'date', 'class': 'form-control',
-                                           'placeholder': 'Kliki kuupäeva valimiseks', 'readonly': 'readonly'},
-                                    format='%d.%m.%Y'),
-            #'date': forms.DateInput( attrs={'type': 'date', 'class': 'form-control', 'id': 'date'}, format='%dd.%mm.%YYYY'),
+            'date': forms.DateInput(attrs={'type': 'text',  'id': 'date', 'class': 'form-control',
+                            'placeholder': 'Kliki kuupäeva valimiseks', 'readonly': 'readonly'}, format='%d.%m.%Y'),
             'topic': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': ''}),
             'chef': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
             'student': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
-            # Other widget definitions for other fields...
-
+        }
+class HeadingUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Heading
+        fields = ['date', 'topic', 'chef', 'student']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'text', 'id': 'date', 'class': 'form-control', 'placeholder': 'Kliki kuupäeva valimiseks', 'autocomplete': 'off'}, format='%d.%m.%Y'),
+            'topic': forms.TextInput(attrs={'type': 'text', 'class': 'form-control', 'placeholder': ''}),
+            'chef': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
+            'student': forms.TextInput(attrs={'type': 'text', 'class': 'form-control'}),
         }
 
-    def clean(self):
-        cleaned_data = super().clean()
-        topic = cleaned_data.get('topic')
-        chef = cleaned_data.get('chef')
-
-        if (topic is None and chef is not None) or (topic is not None and chef is None):
-            raise forms.ValidationError('Teemapaev ja peakokk molemad peavad olema taidetud ja mitte ainult uks kahest')
-
-        return cleaned_data
